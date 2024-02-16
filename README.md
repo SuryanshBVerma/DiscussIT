@@ -1,1 +1,1 @@
-# DiscussIT
+DiscussIT - A Collaborative Dicussion Platform
