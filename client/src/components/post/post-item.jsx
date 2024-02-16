@@ -1,5 +1,6 @@
 import { useState } from "react";
 import {
+  Code,
   Flex,
   Icon,
   Image,
@@ -28,6 +29,7 @@ import moment from "moment";
 import { DeletePostModal } from "../modals/delete-post";
 import { EditPostModel } from "../modals/edit-post-model";
 import { socket } from "../../utils/socket";
+import { VscTerminalPowershell } from "react-icons/vsc";
 
 const PostItem = ({ post }) => {
   const user = isLoggedIn();
@@ -59,7 +61,7 @@ const PostItem = ({ post }) => {
         borderColor={singlePostView ? "white" : "gray.300"}
         borderRadius={singlePostView ? "4px 4px 0px 0px" : 4}
         _hover={{ borderColor: singlePostView ? "none" : "gray.500" }}
-          // onClick={() => onSelectPost && post && onSelectPost(post, postIdx!)}s
+      // onClick={() => onSelectPost && post && onSelectPost(post, postIdx!)}s
       >
         <Flex
           direction="column"
@@ -182,6 +184,15 @@ const PostItem = ({ post }) => {
                   alt="Post Image"
                 />
               </Flex>
+            )}
+
+            {post.code && (
+              <>
+                <Code width={"100%"} rounded={"xl"} p={4} bg={"#dce6ef"}>
+                  <Icon as={VscTerminalPowershell} fontSize={14} flex={"flex-start"} mb={3} />
+                  <pre>{post.code}</pre>
+                </Code>
+              </>
             )}
           </Stack>
           <Flex ml={1} mb={0.5} color="gray.500" fontWeight={600}>

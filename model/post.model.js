@@ -37,6 +37,9 @@ const PostSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+    code: {
+      type: String
+    },
   },
   {
     timestamps: true,

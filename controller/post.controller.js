@@ -3,7 +3,7 @@ const Community = require("../model/community.model");
 
 const createPost = async (req, res) => {
   try {
-    const { title, content, imageUrl, communityId } = req.body;
+    const { title, content, imageUrl, communityId, code } = req.body;
     const userId = req.user.userId;
 
     if (!(title && content)) {
@@ -22,6 +22,7 @@ const createPost = async (req, res) => {
       user: userId,
       community: communityId,
       upvotedBy: [userId],
+      code : code,
     });
 
     community.posts.push(post);
