@@ -197,8 +197,9 @@ export default function Navbar() {
                     rounded={"xl"}
                     minW={"sm"}
                     marginRight={"15rem"}
+                    triggers={triggers}
                   >
-                    <PopoverContentComponent triggers={triggers} />
+                    <PopoverContentComponent/>
                   </PopoverContent>
                 </Popover>
 

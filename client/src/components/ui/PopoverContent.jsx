@@ -1,7 +1,7 @@
 // PopoverContent.js
 import { Avatar, Button, Typography } from "@material-tailwind/react";
 import { isLoggedIn } from "../../utils/auth";
-
+import { FaRegUser } from "react-icons/fa";
 
 
 function PopoverContentComponent() {
@@ -10,22 +10,27 @@ function PopoverContentComponent() {
   return (
     <>
       <div className="mb-2 flex items-center justify-between gap-4">
-        <Avatar
-          size="lg"
-          variant="circular"
-          // src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1480&q=80"
-          src={user?.user?.image ? user.user.image : "https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1480&q=80"}
-          alt="Profile"
-        />
+      {user.user.image ? (
+          <Avatar
+            size="lg"
+            variant="circular"
+            // src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1480&q=80"
+            src={user.user.image}
+            alt="Profile"
+          />
+        ) : (
+          <FaRegUser height={"100%"}/>
+        )}
+
         {/* <Button variant="gradient" size="sm" className="font-medium capitalize">
           Follow
         </Button> */}
       </div>
       <Typography variant="h5" color="blue-gray" className="mb-2 flex items-center gap-2 font-medium">
-        <span>l</span> • <a href="#" className="text-md font-medium text-gray-900">@emmaro</a>
+        <span>{user.user.username}</span> • <a href="#" className="text-md font-medium text-gray-900">{user.user.email}</a>
       </Typography>
       <Typography variant="small" color="gray" className="font-normal text-blue-gray-500">
-        Frontend Developer • Major interest in Web Development: motivated to achieve measurable results, to deepen my knowledge and improve my skills.
+      {user.user.description ? user.user.description : "No despriction added yet!!!"}
       </Typography>
       <div className="mt-6 flex items-center gap-8 border-t border-blue-gray-50 pt-4">
         <Typography variant="small" color="gray" className="flex items-center gap-2 text-sm font-normal text-blue-gray-500">
