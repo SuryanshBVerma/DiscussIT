@@ -65,6 +65,7 @@ export default function Navbar() {
 
 
   const [openPopover, setOpenPopover] = useState(false);
+  const [profilePopover, setProfilePopover] = useState(false);
 
   const triggers = {
     onMouseEnter: () => setOpenPopover(true),
@@ -170,7 +171,10 @@ export default function Navbar() {
               </MenuButton>
               <MenuList fontSize={"10pt"}>
 
-                <Popover trigger="hover" placement={"bottom-start"}>
+                <Popover 
+                  isOpen={profilePopover} 
+                  placement={"bottom-start"}
+                >
                   <PopoverTrigger>
                     <Box
                       as="a"
@@ -183,6 +187,8 @@ export default function Navbar() {
                         textDecoration: "none",
                         // color: "Red",
                       }}
+
+                      onFocus={() => setProfilePopover(!profilePopover)}
                     >
                       <MenuItem>
                         Profile
