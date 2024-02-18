@@ -33,6 +33,8 @@ import Editor from '@monaco-editor/react'
 import { languages, themes } from ".";
 import { Code } from '@chakra-ui/react'
 
+import {handelContentMod}  from "../../../api/textMod";
+
 const formTabs = [
   {
     title: "Post",
@@ -81,6 +83,18 @@ export const PostForm = () => {
 
 
   const handleCreatePost = async () => {
+
+    const textModResult = await handelContentMod(textInputs.title, textInputs.content);
+
+    // console.log(textModResult.moderation_classes);
+
+    const Result = textModResult.moderation_classes;
+
+    if(Result.discriminatory > 0.3 || Result.insulting  > 0.3 || Result.sexual > 0.3|| Result.toxic > 0.3 || Result.violent > 0.3) {
+      toast.error("Oops! The content violates our community guidelines.");
+      return;
+    }
+
     const data = await createPost({
       title: textInputs.title,
       content: textInputs.content,
