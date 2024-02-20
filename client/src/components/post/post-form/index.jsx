@@ -195,7 +195,7 @@ export const PostForm = () => {
                     border={2}
                     borderStyle={"solid"}
                     borderColor={"gray.100"}
-                    placeholder={theme}
+                    placeholder="Theme"
                     size={"sm"}
                     width={"fit-content"}
                     onClick={(e) => setTheme(e.target.value)}

@@ -40,22 +40,47 @@ export const Posts = ({ posts }) => {
 
   return (
     <>
-      {items.length === 0 ? (
-        <PostLoading />
-      ) : (
-        <InfiniteScroll
-          dataLength={items.length}
-          next={fetchMoreData}
-          hasMore={hasMore}
-          loader={<PostLoading />}
-        >
-          <Stack>
-            {items.map((item, i) => (
-              <PostItem post={item} key={i} />
-            ))}
-          </Stack>
-        </InfiniteScroll>
-      )}
+      {
+        posts ? (
+
+          posts.length === 0 ? (
+            <PostLoading />
+          ) : (
+            <InfiniteScroll
+              dataLength={posts.length}
+              next={fetchMoreData}
+              hasMore={hasMore}
+              loader={<PostLoading />}
+            >
+              <Stack>
+                {posts.map((item, i) => (
+                  <PostItem post={item} key={i} />
+                ))}
+              </Stack>
+            </InfiniteScroll>
+          )
+
+        )
+          : (
+            items.length === 0 ? (
+              <PostLoading />
+            ) : (
+              <InfiniteScroll
+                dataLength={items.length}
+                next={fetchMoreData}
+                hasMore={hasMore}
+                loader={<PostLoading />}
+              >
+                <Stack>
+                  {items.map((item, i) => (
+                    <PostItem post={item} key={i} />
+                  ))}
+                </Stack>
+              </InfiniteScroll>
+            )
+
+          )
+      }
     </>
   );
 };

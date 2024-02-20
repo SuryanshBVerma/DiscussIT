@@ -19,9 +19,13 @@ import {
   sortByLikes,
   sortByComments,
 } from "../../redux/sortingSlice";
+import { useState } from "react";
 
 export const CreatePostBtn = ({ handleSort }) => {
   const navigate = useNavigate();
+
+  const [sortBy, setSortBy] = useState("Sort By")
+
   // const dispatch = useDispatch();
   // const handleSort = (sortType) => {
   //   switch (sortType) {
@@ -111,23 +115,23 @@ export const CreatePostBtn = ({ handleSort }) => {
               rightIcon={<ChevronDownIcon />}
               minW={36}
             >
-              Sort By
+              {sortBy} 
             </MenuButton>
             <MenuList>
-              <MenuItem fontSize="10pt" onClick={() => handleSort("createdAt")}>
+              <MenuItem fontSize="10pt" onClick={() =>{setSortBy("Latest"); handleSort("createdAt")}}>
                 Latest
               </MenuItem>
               <MenuItem
                 fontSize="10pt"
                 as={"button"}
-                onClick={() => handleSort("upvotedBy")}
+                onClick={() => {setSortBy("Likes"); handleSort("upvotedBy")}}
               >
                 Likes
               </MenuItem>
               <MenuItem
                 fontSize="10pt"
                 as={"button"}
-                onClick={() => handleSort("commentCount")}
+                onClick={() => {setSortBy("Comments"); handleSort("commentCount")}}
               >
                 Comments
               </MenuItem>
