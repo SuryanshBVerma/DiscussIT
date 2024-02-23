@@ -16,4 +16,7 @@ router.put("/:id", verifyToken, posts.updatePost);
 router.post("/:postId/upvote", verifyToken, posts.upvotePost);
 router.post("/:postId/downvote", verifyToken, posts.downvotePost);
 
+
+router.post("/:postId/poll", verifyToken, posts.updatePoll);
+router.get("/:postId/poll", verifyToken, posts.getPoll);
 module.exports = router;

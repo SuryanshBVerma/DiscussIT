@@ -30,13 +30,17 @@ import { DeletePostModal } from "../modals/delete-post";
 import { EditPostModel } from "../modals/edit-post-model";
 import { socket } from "../../utils/socket";
 import { VscTerminalPowershell } from "react-icons/vsc";
+import Poll from "./post-form/Poll";
 
 const PostItem = ({ post }) => {
+
   const user = isLoggedIn();
   const [loadingImage, setLoadingImage] = useState(true);
   const [loadingDelete, setLoadingDelete] = useState(false);
   const singlePostView = false;
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+
 
   const isUserUpvote = (community) => {
     if (!user) return false;
@@ -52,6 +56,8 @@ const PostItem = ({ post }) => {
     event.stopPropagation();
     setLoadingDelete(true);
   };
+
+
 
   return (
     <>
@@ -192,6 +198,14 @@ const PostItem = ({ post }) => {
                   <Icon as={VscTerminalPowershell} fontSize={14} flex={"flex-start"} mb={3} />
                   <pre>{post.code}</pre>
                 </Code>
+              </>
+            )}
+
+            {post.poll && post.poll.title && 
+            (
+              
+              <>
+               <Poll title={post.poll.title} options={post.poll.options} postId={post._id} />
               </>
             )}
           </Stack>

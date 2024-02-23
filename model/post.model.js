@@ -17,7 +17,6 @@ const PostSchema = new mongoose.Schema(
     },
     content: {
       type: String,
-      required: true,
       maxLength: [8000, "Must be no more than 8000 characters"],
     },
     imageUrl: { type: String },

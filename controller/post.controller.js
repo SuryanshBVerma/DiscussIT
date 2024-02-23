@@ -3,10 +3,12 @@ const Community = require("../model/community.model");
 
 const createPost = async (req, res) => {
   try {
-    const { title, content, imageUrl, communityId, code } = req.body;
+    const { title, content, imageUrl, communityId, code, poll } = req.body;
     const userId = req.user.userId;
 
-    if (!(title && content)) {
+
+
+    if (!(title && (content || code || poll))) {
       throw new Error("All input required");
     }
     const community = await Community.findById(communityId);
@@ -22,7 +24,8 @@ const createPost = async (req, res) => {
       user: userId,
       community: communityId,
       upvotedBy: [userId],
-      code : code,
+      code: code,
+      poll: poll
     });
 
     community.posts.push(post);
@@ -240,6 +243,75 @@ const downvotePost = async (req, res) => {
   }
 };
 
+const updatePoll = async (req, res) => {
+
+  const postId = req.params.postId; // Capturing the post Id
+  const userId = req.user.userId; // Capturing the user Id
+
+
+  try {
+
+    const post = await Post.findById(postId); // Finding post in the database
+    const value = req.body.value; // Option to be updated 
+
+    if (!post) { // If post is not found
+      return res.status(404).json({ message: "Post not found" });
+    }
+
+    if (post.poll.options.has(value)) {
+      // Update the value in the map
+      post.poll.options.set(value, post.poll.options.get(value) + 1); // Replace newValue with the updated value
+
+
+      // Check if user is already added
+      if (!post.poll.voters.includes(userId)) {
+        // Add userId to the voters array
+        post.poll.voters.push(userId);
+
+        // Save the updated post back to the database
+        await post.save();
+      }
+
+
+      // console.log(post.poll.options.get(value));
+
+      return res.status(200).json({ message: "Successfully Updated poll", poll: post.poll });
+
+    } else {
+      return res.status(404).json({ message: "Option not found in poll" });
+    }
+
+  } catch (error) {
+    console.error(`Error Updating Poll: ${error.message}`);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+
+};
+
+const getPoll = async (req, res) => {
+  const postId = req.params.postId; // Capturing the post Id
+  const userId = req.user.userId;
+
+
+  try {
+    const post = await Post.findById(postId);
+
+    if (!post) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+
+    if (post.poll) {
+      return res.status(200).json({ poll: post.poll });
+    } else {
+      return res.status(200).json({ poll: "Poll Does not exsist" });
+    }
+
+  } catch (error) {
+    console.error(`Error checking poll voters: ${error.message}`);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+}
+
 module.exports = {
   createPost,
   getPosts,
@@ -250,4 +322,6 @@ module.exports = {
   searchPosts,
   upvotePost,
   downvotePost,
+  updatePoll,
+  getPoll,
 };

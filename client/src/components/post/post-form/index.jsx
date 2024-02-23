@@ -12,6 +12,9 @@ import {
   Text,
   Textarea,
   VStack,
+  Input,
+  Stack,
+  Spacer
 } from "@chakra-ui/react";
 import { useEffect, useRef, useState } from "react";
 import { BiPoll } from "react-icons/bi";
@@ -27,13 +30,16 @@ import { createPost } from "../../../api/posts";
 import { getCommunities } from "../../../api/communities";
 import { useNavigate } from "react-router-dom";
 import { VscTerminalPowershell } from 'react-icons/vsc'
-
+import { IoMdAdd } from "react-icons/io";
+import { FaMinus } from "react-icons/fa6";
 
 import Editor from '@monaco-editor/react'
 import { languages, themes } from ".";
 import { Code } from '@chakra-ui/react'
 
-import {handelContentMod}  from "../../../api/textMod";
+import { handelContentMod } from "../../../api/textMod";
+import { CgPoll } from "react-icons/cg";
+import Options from "./Options";
 
 const formTabs = [
   {
@@ -48,23 +54,40 @@ const formTabs = [
     title: "<Code/>",
     icon: VscTerminalPowershell,
   },
+  {
+    title: "Poll",
+    icon: CgPoll,
+  },
 ];
 
 export const PostForm = () => {
+
+  // Data from the form
   const [selectedTab, setSelectedTab] = useState(formTabs[0].title);
   const [textInputs, setTextInputs] = useState({
     title: "",
     content: "",
   });
+
   const [community, setCommunity] = useState("");
   const [selectedFile, setSelectedFile] = useState();
   const selectFileRef = useRef(null);
   const [communities, setCommunities] = useState([]);
   const navigate = useNavigate();
 
+  // Code Data
   const [lang, setLang] = useState("Choose a language")
   const [theme, setTheme] = useState("vs-dark")
   const [code, setCode] = useState("")
+
+  // Poll Data
+  const [pollTitle, SetPollTitle] = useState("")
+  const [pollOpt, setPollOpt] = useState({})
+  const [poll, setPoll] = useState({})
+
+  // useEffect(() => {
+  //   console.log(pollTitle);
+  // }, [pollTitle])
 
 
 
@@ -82,26 +105,58 @@ export const PostForm = () => {
   };
 
 
+
   const handleCreatePost = async () => {
 
+    // Handeling TextMod
     const textModResult = await handelContentMod(textInputs.title, textInputs.content);
-
     // console.log(textModResult.moderation_classes);
 
     const Result = textModResult.moderation_classes;
 
-    if(Result.discriminatory > 0.3 || Result.insulting  > 0.3 || Result.sexual > 0.3|| Result.toxic > 0.3 || Result.violent > 0.3) {
+    if (Result.discriminatory > 0.3 || Result.insulting > 0.3 || Result.sexual > 0.3 || Result.toxic > 0.3 || Result.violent > 0.3) {
       toast.error("Oops! The content violates our community guidelines.");
       return;
     }
 
+    // Setting poll if exsists
+    var pollData
+    if (pollTitle && pollOpt) {
+      // Create poll
+      var opt = {}
+      Object.entries(pollOpt).forEach(([key, value]) => {
+        // Remove blank values (empty strings)
+        if (value.trim() !== '') {
+          opt[value] = 0;
+        }
+      });
+
+      if (!(opt)) {
+        toast.error("Unable to Post the Poll -- length");
+        return
+      }
+
+      pollData = {
+        title: pollTitle,
+        options: opt
+      }
+
+      console.log(pollData);
+      // toast.error("Unable to Post the Poll");
+      // return
+    }
+
+
+    // Creating data Json
     const data = await createPost({
       title: textInputs.title,
       content: textInputs.content,
       imageUrl: selectedFile,
       communityId: community,
-      code : code
+      code: code,
+      poll : pollData
     });
+
     if (!data.error) {
       toast.success("Post created successfully!");
       navigate(`/explore`);
@@ -113,6 +168,19 @@ export const PostForm = () => {
   const onMount = (editor) => {
     editor.current = editor;
     editor.focus();
+  }
+
+  const [count, setCount] = useState(1)
+
+  const handelCount = (operator) => {
+
+    if (operator) {
+      var t = count
+      t++;
+      setCount(t)
+      console.log(count);
+    }
+
   }
 
 
@@ -195,7 +263,7 @@ export const PostForm = () => {
                     border={2}
                     borderStyle={"solid"}
                     borderColor={"gray.100"}
-                    placeholder="Theme"
+                    placeholder={"Theme"}
                     size={"sm"}
                     width={"fit-content"}
                     onClick={(e) => setTheme(e.target.value)}
@@ -224,6 +292,35 @@ export const PostForm = () => {
                   <pre>{code}</pre>
                 </Code>
               </VStack>
+            </>
+          )}
+
+          {selectedTab === "Poll" && (
+            <>
+              <Stack spacing={5} width={"100%"} >
+                <Input
+                  _placeholder={{ color: "gray.500" }}
+                  _focus={{
+                    outline: "none",
+                    bg: "white",
+                    border: "1px solid",
+                    borderColor: "black",
+                  }}
+                  fontSize="10pt"
+                  borderRadius={4}
+                  placeholder="Ask Question"
+                  value={pollTitle ? pollTitle : ''}
+                  onChange={(e) => SetPollTitle(e.target.value)}
+                />
+
+                <HStack justifyContent="flex-end" width="100%">
+                  <Spacer />
+                  <Button onClick={handelCount} rounded={"full"}><IoMdAdd /></Button>
+                  <Button onClick={() => { var t = count; if (t > 1) { setCount(--t) } }} rounded={"full"}><FaMinus /></Button>
+                </HStack>
+
+                <Options count={count} setPollOpt={setPollOpt} pollOpt={pollOpt} />
+              </Stack>
             </>
           )}
 

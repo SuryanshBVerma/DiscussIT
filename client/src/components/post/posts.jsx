@@ -10,6 +10,7 @@ export const Posts = ({ posts }) => {
   const [items, setItems] = useState([]);
   const [hasMore, setHasMore] = useState(true);
   const [index, setIndex] = useState(2);
+  const [Posts, setPosts] = useState(posts)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -29,6 +30,8 @@ export const Posts = ({ posts }) => {
     await fetch(`${BASE_URL}api/posts/page/${index}`)
       .then(async (res) => {
         const data = await res.json();
+
+        setPosts((prevItems) => [...prevItems, ...data])
         setItems((prevItems) => [...prevItems, ...data]);
 
         data.length > 0 ? setHasMore(true) : setHasMore(false);
@@ -42,12 +45,12 @@ export const Posts = ({ posts }) => {
     <>
       {
         posts ? (
-
+        
           posts.length === 0 ? (
             <PostLoading />
           ) : (
             <InfiniteScroll
-              dataLength={posts.length}
+              dataLength={Posts.length}
               next={fetchMoreData}
               hasMore={hasMore}
               loader={<PostLoading />}
@@ -59,28 +62,29 @@ export const Posts = ({ posts }) => {
               </Stack>
             </InfiniteScroll>
           )
-
+        
         )
-          : (
-            items.length === 0 ? (
-              <PostLoading />
-            ) : (
-              <InfiniteScroll
-                dataLength={items.length}
-                next={fetchMoreData}
-                hasMore={hasMore}
-                loader={<PostLoading />}
-              >
-                <Stack>
-                  {items.map((item, i) => (
-                    <PostItem post={item} key={i} />
-                  ))}
-                </Stack>
-              </InfiniteScroll>
-            )
-
+        :(
+          items.length === 0 ? (
+            <PostLoading />
+          ) : (
+            <InfiniteScroll
+              dataLength={items.length}
+              next={fetchMoreData}
+              hasMore={hasMore}
+              loader={<PostLoading />}
+            >
+              <Stack>
+                {items.map((item, i) => (
+                  <PostItem post={item} key={i} />
+                ))}
+              </Stack>
+            </InfiniteScroll>
           )
+          
+        )
       }
+
     </>
   );
 };

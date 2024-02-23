@@ -26,21 +26,6 @@ export const CreatePostBtn = ({ handleSort }) => {
 
   const [sortBy, setSortBy] = useState("Sort By")
 
-  // const dispatch = useDispatch();
-  // const handleSort = (sortType) => {
-  //   switch (sortType) {
-  //     case 'latest':
-  //       dispatch(sortByLatest());
-  //       break;
-  //     case 'likes':
-  //       dispatch(sortByLikes());
-  //       break;
-  //     case 'comments':
-  //       dispatch(sortByComments());
-  //       break;
-  //     default:
-  //       break;
-  //   }}
 
   return (
     <Flex
@@ -118,7 +103,7 @@ export const CreatePostBtn = ({ handleSort }) => {
               {sortBy} 
             </MenuButton>
             <MenuList>
-              <MenuItem fontSize="10pt" onClick={() =>{setSortBy("Latest"); handleSort("createdAt")}}>
+              <MenuItem fontSize="10pt" onClick={() => {setSortBy("Latest"); handleSort("createdAt")}}>
                 Latest
               </MenuItem>
               <MenuItem
@@ -131,7 +116,7 @@ export const CreatePostBtn = ({ handleSort }) => {
               <MenuItem
                 fontSize="10pt"
                 as={"button"}
-                onClick={() => {setSortBy("Comments"); handleSort("commentCount")}}
+                onClick={() =>{setSortBy("Comments"); handleSort("commentCount")}}
               >
                 Comments
               </MenuItem>
