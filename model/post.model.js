@@ -36,9 +36,28 @@ const PostSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+
     code: {
       type: String
     },
+
+    poll: { // For Polling 
+      title: {
+        type: String
+      },
+
+      options: {
+        type: Map,
+        of: Number
+      }, // Using Map to store key-value pairs of options and their counts
+
+      voters: [
+        {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'User'
+        }
+      ] // Reference to the User document for voters
+    }
   },
   {
     timestamps: true,
