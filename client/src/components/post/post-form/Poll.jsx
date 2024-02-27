@@ -3,52 +3,44 @@ import React, { useEffect, useState } from 'react'
 import { Progress } from '@chakra-ui/react'
 import { BASE_URL } from '../../../config'
 import { isLoggedIn } from '../../../utils/auth'
-
+import { Navigate } from 'react-router-dom'
+// import { polls } from '../constants/poll'
 
 const Poll = ({ title, options, postId}) => {
 
 
     const [value, setValue] = useState('')
-    const [isDisabled, setIsDisabled] = useState(false)
+    const user = isLoggedIn();
+    const [isDisabled, setIsDisabled] = useState( user ? false : true) 
+    
 
 
-    useEffect(() => {
-
-        const user = isLoggedIn();
-        if (!user) {
-            return new Error("User not logged in");
-        }
-
-
-        try {
-            const getPollVoters = async () => {
-                const response = await fetch(`${BASE_URL}api/posts/${postId}/poll`, {
-                    method: "GET",
-                    headers: {
-                        Accept: "application/json",
-                        "Content-Type": "application/json",
-                        "x-access-token": user.token,
-                    }
-                });
-                const data = await response.json();
-
-                // console.log(data.poll.voters.includes(user.userId));
-                // console.log(user.userId);
-
-                if (data.poll && data.poll.voters.includes(user.userId)) {
-                    // console.log("Voted");
-                    setIsDisabled(true);
+    const getPollVoters =  async () => {
+        try{
+            const response = await fetch(`${BASE_URL}api/posts/${postId}/poll`, {
+                method: "GET",
+                headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json",
+                    "x-access-token": user.token,
                 }
-                // setIsDisabled(true)
-                // reFetchOptions()
+            });
+            const data = await response.json();
+
+            if (data.poll && data.poll.voters.includes(user.userId)) {
+                setIsDisabled(true);
             }
-
-            getPollVoters();
-
-        } catch (err) {
+        }catch(err){
             console.log("Poll Update : ", err);
         }
+    }
 
+    useEffect(() => {
+        if (user) {
+            getPollVoters();
+        }
+
+        
     }, [])
 
 
@@ -61,18 +53,9 @@ const Poll = ({ title, options, postId}) => {
         return total !== 0 ? parseFloat((value / total * 100)).toFixed(1) : 0
     };
 
-    // useEffect(()=>{
-        
-    // }, [options])
+    const updatePoll = async (value, postId) => {
 
-    useEffect(() => {
-        console.log(value);
-
-        if (value) {
-
-            const updatePoll = async (value, postId) => {
-
-                const user = isLoggedIn();
+        const user = isLoggedIn();
                 if (!user) {
                     return new Error("User not logged in");
                 }
@@ -92,10 +75,15 @@ const Poll = ({ title, options, postId}) => {
                     console.log(data.poll);
                     setIsDisabled(true)
                     
+                    Navigate(`/explore`);
                 } catch (err) {
                     console.log("Poll Update : ", err);
                 }
-            };
+    }
+
+    useEffect(() => {
+        console.log(value);
+        if (value) {
             updatePoll(value, postId);
         }
     }, [value]);
