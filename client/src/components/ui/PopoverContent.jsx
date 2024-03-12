@@ -6,7 +6,7 @@ import { FaRegUser } from "react-icons/fa";
 
 function PopoverContentComponent() {
   const user = isLoggedIn();
-  console.log(user);
+  // console.log(user);
   return (
     <>
       <div className="mb-2 flex items-center justify-between gap-4">

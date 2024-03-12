@@ -16,7 +16,7 @@ export const ExplorePage = () => {
   usePageMeta("DiscussIT | Explore");
 
   const [posts, setPosts] = useState([]);
-  const [sortType, setSortType] = useState("createdAt");
+  const [sortType, setSortType] = useState("");
 
   const handleSort = (type) => {
     setSortType(type);
@@ -24,12 +24,14 @@ export const ExplorePage = () => {
 
   useEffect(() => {
     getPosts().then((data) => {
+      // console.log(data);
       let sortedPosts;
       switch (sortType) {
         case "createdAt":
           sortedPosts = [...data].sort(
             (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
           );
+          // console.log(sortedPosts); 
           break;
         case "upvotedBy":
           sortedPosts = [...data].sort((a, b) => {
@@ -41,6 +43,7 @@ export const ExplorePage = () => {
               : 0;
             return bUpvotes - aUpvotes;
           });
+          // console.log(sortedPosts);
           break;
         case "commentCount":
           sortedPosts = [...data].sort((a, b) => {
@@ -50,11 +53,13 @@ export const ExplorePage = () => {
               typeof b.commentCount === "number" ? b.commentCount : 0;
             return bComments - aComments;
           });
+          // console.log(sortedPosts);
           break;
         default:
-          sortedPosts = data;
+          // sortedPosts = data;
       }
-      setPosts(sortedPosts);
+      setPosts([...sortedPosts]);
+      // console.log(posts);
       socket.emit("postUpdated");
     });
   }, [sortType, socket]);
