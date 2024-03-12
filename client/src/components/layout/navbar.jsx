@@ -122,8 +122,9 @@ export default function Navbar() {
           </Flex>
           <Flex
             w={{ base: "100%", md: "auto" }}
-            minW={{ base: "180px", md: "240px" }}
-            display={{ base: "flex" }}
+            minW={{ base: "300px", md: "340px"}}
+            // minW={{ base: "50%", md: "md"}}
+            display={{ base: "none", md: "flex" }}
             ml={10}
           >
             <InputGroup>

@@ -44,24 +44,13 @@ export const Posts = ({ posts }) => {
   return (
     <>
       {
-        posts ? (
+        posts.length > 0 ? (
         
-          posts.length === 0 ? (
-            <PostLoading />
-          ) : (
-            <InfiniteScroll
-              dataLength={Posts.length}
-              next={fetchMoreData}
-              hasMore={hasMore}
-              loader={<PostLoading />}
-            >
               <Stack>
                 {posts.map((item, i) => (
                   <PostItem post={item} key={i} />
                 ))}
               </Stack>
-            </InfiniteScroll>
-          )
         
         )
         :(
